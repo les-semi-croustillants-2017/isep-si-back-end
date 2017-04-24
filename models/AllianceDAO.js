@@ -3,12 +3,11 @@ const DB = require('../models/Database')
 module.exports = {
   getById (id) {
     return DB.accessor.query(
-      'SELECT * FROM alliances WHERE id = ${allianceID}',
-      { allianceID: id }
+      `SELECT * FROM alliances WHERE id = ${id}`
     )
       .then((result) => {
         if (result.length === 0) {
-          throw 'ALLIANCE NOT_FOUND'
+          throw new Error('ALLIANCE NOT_FOUND')
         }
         return result[ 0 ]
       })
@@ -29,13 +28,13 @@ module.exports = {
 
   create (name) {
     return DB.accessor.query(
-      'INSERT INTO alliances(name) VALUES(${name}) RETURNING *',
+      `INSERT INTO alliances(name) VALUES(${name}) RETURNING *`,
       {
         name: name
       })
       .then((result) => {
         if (result.length === 0) {
-          throw 'ALLIANCE NOT CREATED'
+          throw new Error('ALLIANCE NOT CREATED')
         }
         return result[ 0 ]
       })
@@ -45,8 +44,7 @@ module.exports = {
   },
 
   delete (id) {
-    return DB.accessor.query('DELETE FROM alliances WHERE id = ${allianceID}',
-      { allianceID: id })
+    return DB.accessor.query(`DELETE FROM alliances WHERE id = ${id}`)
       .then((result) => {
         return result
       })
@@ -56,14 +54,13 @@ module.exports = {
   },
 
   update (id, name) {
-    return DB.accessor.query('UPDATE alliances SET name = ${name} WHERE id = ${allianceID} RETURNING *',
+    return DB.accessor.query(`UPDATE alliances SET name = ${name} WHERE id = ${id} RETURNING *`,
       {
-        allianceID: id,
         name: name
       })
       .then((result) => {
         if (result.length === 0) {
-          throw 'ALLIANCE NOT_FOUND'
+          throw new Error('ALLIANCE NOT_FOUND')
         }
         return result[ 0 ]
       })
@@ -74,7 +71,7 @@ module.exports = {
 
   getUsers (allianceID) {
     return DB.accessor.query(
-      'SELECT * FROM users WHERE alliance_id = ${allianceID}',
+      `SELECT * FROM users WHERE alliance_id = ${allianceID}`,
       { allianceID: allianceID })
       .then((result) => {
         return result
@@ -86,7 +83,7 @@ module.exports = {
 
   getCharacters (allianceID) {
     return DB.accessor.query(
-      'SELECT characters.* FROM characters INNER JOIN users ON characters.user_id = users.id WHERE users.alliance_id = ${allianceID}',
+      `SELECT characters.* FROM characters INNER JOIN users ON characters.user_id = users.id WHERE users.alliance_id = ${allianceID}`,
       { allianceID: allianceID })
       .then((result) => {
         return result
@@ -98,7 +95,7 @@ module.exports = {
 
   getCharactersWithClass (allianceID, characterClass) {
     return DB.accessor.query(
-      'SELECT characters.* FROM characters INNER JOIN users ON characters.user_id = users.id WHERE users.alliance_id = ${allianceID} AND characters.class = ${characterClass}',
+      `SELECT characters.* FROM characters INNER JOIN users ON characters.user_id = users.id WHERE users.alliance_id = ${allianceID} AND characters.class = ${characterClass}`,
       {
         allianceID: allianceID,
         characterClass: characterClass

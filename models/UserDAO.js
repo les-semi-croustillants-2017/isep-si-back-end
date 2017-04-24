@@ -3,12 +3,11 @@ const DB = require('../models/Database')
 module.exports = {
   getById (id) {
     return DB.accessor.query(
-      'SELECT * FROM users WHERE id = ${userID}',
-      { userID: id }
+      `SELECT * FROM users WHERE id = ${id}`
     )
       .then((result) => {
         if (result.length === 0) {
-          throw 'USER NOT_FOUND'
+          throw new Error('USER NOT_FOUND')
         }
         return result[ 0 ]
       })
@@ -29,14 +28,10 @@ module.exports = {
 
   create (username, email) {
     return DB.accessor.query(
-      'INSERT INTO users(name, email) VALUES(${userName}, ${mail}) RETURNING *',
-      {
-        userName: username,
-        mail: email
-      })
+      `INSERT INTO users(name, email) VALUES(${username}, ${email}) RETURNING *`)
       .then((result) => {
         if (result.length === 0) {
-          throw 'USER NOT CREATED'
+          throw new Error('USER NOT CREATED')
         }
         return result[ 0 ]
       })
@@ -46,8 +41,7 @@ module.exports = {
   },
 
   delete (id) {
-    return DB.accessor.query('DELETE FROM users WHERE id = ${userID}',
-      { userID: id })
+    return DB.accessor.query(`DELETE FROM users WHERE id = ${id}`)
       .then((result) => {
         return result
       })
@@ -55,18 +49,16 @@ module.exports = {
         throw error
       })
   },
-
-  update (id, name, email, alliance_id) {
-    return DB.accessor.query('UPDATE users SET name = ${name}, email = ${email}, alliance_id = ${alliance_id} WHERE id = ${userID} RETURNING *',
+  update (id, name, email, allianceId) {
+    return DB.accessor.query(`UPDATE users SET name = ${name}, email = ${email}, alliance_id = ${allianceId} WHERE id = ${id} RETURNING *`,
       {
         userID: id,
         name: name,
-        email: email,
-        alliance_id: alliance_id
+        email: email
       })
       .then((result) => {
         if (result.length === 0) {
-          throw 'USER NOT_FOUND'
+          throw new Error('USER NOT_FOUND')
         }
         return result[ 0 ]
       })
@@ -77,10 +69,7 @@ module.exports = {
 
   getCharacters (id) {
     return DB.accessor.query(
-      'SELECT * from characters WHERE user_id = ${userID}',
-      {
-        userID: id
-      })
+      `SELECT * from characters WHERE user_id = ${id}`)
       .then((result) => {
         return result
       })

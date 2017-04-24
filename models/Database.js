@@ -14,7 +14,7 @@ const DB = {
   accessor: pgp(config),
 
   sql: function (file) {
-    var fullPath = path.join(__dirname, file) // generating full path
+    var fullPath = path.join(__dirname, file) // generating full path;
     return new QueryFile(fullPath, { minify: false })
   }
 
