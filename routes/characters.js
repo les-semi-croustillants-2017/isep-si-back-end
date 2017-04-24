@@ -46,8 +46,8 @@ router.post('/', function (req, res, next) {
   var name = req.body.character.name
   var characterClass = req.body.character.class
   var position = req.body.character.position
-  var user_id = req.body.character.user_id
-  CharacterDAO.create(name, characterClass, position, user_id)
+  var userId = req.body.character.user_id
+  CharacterDAO.create(name, characterClass, position, userId)
     .then((character) => {
       res.status(200)
         .json({
@@ -96,9 +96,9 @@ router.put('/:id', function (req, res, next) {
   var name = req.body.character.name
   var characterClass = req.body.character.class
   var position = req.body.character.position
-  var user_id = req.body.character.user_id
+  var userId = req.body.character.userId
 
-  CharacterDAO.update(id, name, characterClass, position, user_id)
+  CharacterDAO.update(id, name, characterClass, position, userId)
     .then((character) => {
       res.status(200)
         .json({

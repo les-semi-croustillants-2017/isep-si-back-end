@@ -101,9 +101,9 @@ router.put('/:id', function (req, res, next) {
   var id = parseInt(req.params.id)
   var name = req.body.user.name
   var email = req.body.user.email
-  var alliance_id = req.body.user.alliance_id
+  var allianceId = req.body.user.allianceId
 
-  UserDAO.update(id, name, email, alliance_id)
+  UserDAO.update(id, name, email, allianceId)
     .then((user) => {
       res.status(200)
         .json({
