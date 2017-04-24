@@ -1,35 +1,35 @@
-const DB = require('../models/Database');
-const rad2deg = require('rad2deg');
-const deg2rad = require('deg2rad');
+const DB = require('../models/Database')
+const rad2deg = require('rad2deg')
+const deg2rad = require('deg2rad')
 
 module.exports = {
-  getById(id) {
+  getById (id) {
     return DB.accessor.query(
       'SELECT * FROM characters WHERE id = ${characterID}',
       { characterID: id }
     )
       .then((result) => {
         if (result.length === 0) {
-          throw 'CHARACTER NOT_FOUND';
+          throw 'CHARACTER NOT_FOUND'
         }
         return result[ 0 ]
       })
       .catch((error) => {
-        throw error;
+        throw error
       })
   },
 
-  getAll() {
+  getAll () {
     return DB.accessor.query('SELECT * FROM characters')
       .then((result) => {
-        return result;
+        return result
       })
       .catch((error) => {
-        throw error;
+        throw error
       })
   },
 
-  create(name, characterClass, position, user_id) {
+  create (name, characterClass, position, user_id) {
     return DB.accessor.query(
       'INSERT INTO characters(name, class, position, user_id) VALUES(${name},${characterClass},point(${x},${y}) ,${user_id}) RETURNING *',
       {
@@ -42,27 +42,27 @@ module.exports = {
     )
       .then((result) => {
         if (result.length === 0) {
-          throw 'CHARACTER NOT CREATED';
+          throw 'CHARACTER NOT CREATED'
         }
         return result[ 0 ]
       })
       .catch((error) => {
-        throw error;
+        throw error
       })
   },
 
-  delete(id) {
+  delete (id) {
     return DB.accessor.query('DELETE FROM characters WHERE id = ${characterID}',
       { characterID: id })
       .then((result) => {
-        return result;
+        return result
       })
       .catch((error) => {
-        throw error;
+        throw error
       })
   },
 
-  update(id, name, characterClass, position, user_id) {
+  update (id, name, characterClass, position, user_id) {
     return DB.accessor.query('UPDATE characters SET name = ${name}, class = ${characterClass}, position = point(${x},${y}), user_id = ${user_id} WHERE id = ${characterID} RETURNING *',
       {
         characterID: id,
@@ -74,16 +74,16 @@ module.exports = {
       })
       .then((result) => {
         if (result.length === 0) {
-          throw 'CHARACTER NOT_FOUND';
+          throw 'CHARACTER NOT_FOUND'
         }
         return result[ 0 ]
       })
       .catch((error) => {
-        throw error;
+        throw error
       })
   },
 
-  getWithClass(characterClass) {
+  getWithClass (characterClass) {
     return DB.accessor.query(
       'SELECT * FROM characters WHERE class = ${characterClass}',
       {
@@ -93,23 +93,22 @@ module.exports = {
         return results
       })
       .catch((error) => {
-        throw error;
+        throw error
       })
   },
 
-  getAlliesInRadius(characterID, radius) {
+  getAlliesInRadius (characterID, radius) {
     return this.getById(characterID)
       .then((character) => {
+        var lat = character.position.x
+        var long = character.position.y
 
-        var lat = character.position.x;
-        var long = character.position.y;
+        var earthRadius = 6371000
 
-        var earthRadius = 6371000;
-
-        var maxLat = lat + rad2deg(earthRadius / radius);
-        var minLat = lat - rad2deg(earthRadius / radius);
-        var maxLong = long + rad2deg(Math.asin(radius / earthRadius) / Math.cos(deg2rad(lat)));
-        var minLong = long - rad2deg(Math.asin(radius / earthRadius) / Math.cos(deg2rad(lat)));
+        var maxLat = lat + rad2deg(earthRadius / radius)
+        var minLat = lat - rad2deg(earthRadius / radius)
+        var maxLong = long + rad2deg(Math.asin(radius / earthRadius) / Math.cos(deg2rad(lat)))
+        var minLong = long - rad2deg(Math.asin(radius / earthRadius) / Math.cos(deg2rad(lat)))
 
         return DB.accessor.query(
           'SELECT * FROM  (SELECT c_all.* FROM characters c ' +
@@ -136,27 +135,26 @@ module.exports = {
           })
       })
       .then((characters) => {
-        return characters;
+        return characters
       })
       .catch((error) => {
-        console.log('error' + error);
-        throw error;
+        console.log('error' + error)
+        throw error
       })
   },
 
-  getEnemiesInRadius(characterID, radius) {
+  getEnemiesInRadius (characterID, radius) {
     return this.getById(characterID)
       .then((character) => {
+        var lat = character.position.x
+        var long = character.position.y
 
-        var lat = character.position.x;
-        var long = character.position.y;
+        var earthRadius = 6371000
 
-        var earthRadius = 6371000;
-
-        var maxLat = lat + rad2deg(earthRadius / radius);
-        var minLat = lat - rad2deg(earthRadius / radius);
-        var maxLong = long + rad2deg(Math.asin(radius / earthRadius) / Math.cos(deg2rad(lat)));
-        var minLong = long - rad2deg(Math.asin(radius / earthRadius) / Math.cos(deg2rad(lat)));
+        var maxLat = lat + rad2deg(earthRadius / radius)
+        var minLat = lat - rad2deg(earthRadius / radius)
+        var maxLong = long + rad2deg(Math.asin(radius / earthRadius) / Math.cos(deg2rad(lat)))
+        var minLong = long - rad2deg(Math.asin(radius / earthRadius) / Math.cos(deg2rad(lat)))
 
         return DB.accessor.query(
           'SELECT * FROM  (SELECT c_all.* FROM characters c ' +
@@ -183,11 +181,11 @@ module.exports = {
           })
       })
       .then((characters) => {
-        return characters;
+        return characters
       })
       .catch((error) => {
-        console.log('error' + error);
-        throw error;
+        console.log('error' + error)
+        throw error
       })
   }
-};
+}
