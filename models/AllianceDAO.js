@@ -3,8 +3,7 @@ const DB = require('../models/Database')
 module.exports = {
   getById (id) {
     return DB.accessor.query(
-      `SELECT * FROM alliances WHERE id = ${`allianceID`}`,
-      { allianceID: id }
+      `SELECT * FROM alliances WHERE id = ${id}`
     )
       .then((result) => {
         if (result.length === 0) {
@@ -45,8 +44,7 @@ module.exports = {
   },
 
   delete (id) {
-    return DB.accessor.query(`DELETE FROM alliances WHERE id = ${`allianceID`}`,
-      { allianceID: id })
+    return DB.accessor.query(`DELETE FROM alliances WHERE id = ${id}`)
       .then((result) => {
         return result
       })
@@ -56,9 +54,8 @@ module.exports = {
   },
 
   update (id, name) {
-    return DB.accessor.query(`UPDATE alliances SET name = ${name} WHERE id = ${`allianceID`} RETURNING *`,
+    return DB.accessor.query(`UPDATE alliances SET name = ${name} WHERE id = ${id} RETURNING *`,
       {
-        allianceID: id,
         name: name
       })
       .then((result) => {
